@@ -1,0 +1,23 @@
+# Byte-compiled 
+__pycache__/
+
+#DB
+*.db
+
+#Json file
+*.json
+
+#env file
+.env
+
+# Installer logs
+venv/
+myenv/
+Pipfile
+Pipfile.lock
+
+# Flask stuff:
+instance/
+
+
+
