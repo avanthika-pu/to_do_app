@@ -1,18 +1,21 @@
 from app import db
 from config import Config
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (generate_password_hash, check_password_hash)
 from flask_httpauth import HTTPBasicAuth
 from app.models import BaseModel
+from datetime import datetime
 
 auth = HTTPBasicAuth()
 
-class Users(BaseModel):
-    __tablename__ = 'users'
+class User(BaseModel):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.VARCHAR(128), index=True, unique=True)
-    first_name = db.Column(db.VARCHAR(128))
-    last_name = db.Column(db.VARCHAR(64))
+    first_name = db.Column(db.String(128))
+    last_name = db.Column(db.String(64))
     password = db.Column(db.TEXT(128))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         data = {
@@ -21,7 +24,8 @@ class Users(BaseModel):
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'created': self.created.strftime('%Y-%m-%d %H:%M %p')
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
         }
         return data
 

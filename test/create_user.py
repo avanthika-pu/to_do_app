@@ -1,12 +1,12 @@
 import requests
 
-url = 'http://127.0.0.1:5001/user/create'
+url = 'http://127.0.0.1:5000/user/create'
 
 form_data = {
-                'email': 'Johndoe@gmail.com',
-                'first_name': 'John',
-                'last_name': 'Doe',
-                'password':'John@123'
+                'email': 'dennis@gmail.com',
+                'first_name': 'Dennis',
+                'last_name': 'John',
+                'password':'Dennis@123'
 }
 
 response = requests.post(url,json=form_data)

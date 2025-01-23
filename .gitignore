@@ -24,7 +24,7 @@ __pycache__/
 
 #env file
 .env
-myvenv
+myvenv/
 
 #tmp folder
 tmp/
@@ -36,6 +36,8 @@ lib/
 lib64/
 wheels/
 .installed.cfg
+
+
 
 
 
@@ -86,9 +88,6 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
 
 # Environments
 .venv
