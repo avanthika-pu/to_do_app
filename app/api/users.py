@@ -1,4 +1,3 @@
-# app/api/user_api.py
 from flask import Blueprint, request, jsonify
 from app.services.user_service import create_user
 
