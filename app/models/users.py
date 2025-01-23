@@ -10,10 +10,10 @@ auth = HTTPBasicAuth()
 class Users(BaseModel):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(128), index=True, unique=True)
-    first_name = db.Column(db.String(128))
-    last_name = db.Column(db.String(64))
-    password = db.Column(db.String(128))
+    email = db.Column(db.VARCHAR(128), index=True, unique=True)
+    first_name = db.Column(db.VARCHAR(128))
+    last_name = db.Column(db.VARCHAR(64))
+    password = db.Column(db.TEXT(128))
 
     def to_dict(self):
         data = {

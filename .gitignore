@@ -9,6 +9,8 @@ __pycache__/
 
 #env file
 .env
+.myvenv
+/myvenv/
 
 # Installer logs
 venv/
