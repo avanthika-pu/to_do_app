@@ -1,25 +1,98 @@
-# Byte-compiled 
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+*.log*
 
 #DB
 *.db
 
+#Zip file
+*.zip
+
+#CSV file
+*.csv
+
 #Json file
 *.json
 
+#log file
+*.log
+
 #env file
 .env
-.myvenv
-/myvenv/
+myvenv
+
+#tmp folder
+tmp/
+
+# Distribution / packaging
+.Python
+downloads/
+lib/
+lib64/
+wheels/
+.installed.cfg
+
+
+
 
 # Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 venv/
 myenv/
 Pipfile
 Pipfile.lock
+.DS_Store
+.flaskenv
+
+#environment variable in .env file
+.env
+
+# Translations
+*.mo
+*.pot
+
 
 # Flask stuff:
 instance/
+.webassets-cache
 
 
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+ pipenv
+Pipfile.lock
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+.env/
+env.bak/
+venv.bak/
 
