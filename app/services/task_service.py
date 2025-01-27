@@ -15,3 +15,12 @@ def delete_task(task_id: int) -> bool:
         return True 
     else:
         return False
+
+def archive_task_service(task_id: int) -> bool:
+    task = Task.query.get(task_id)
+    if task:
+        task.archived = True
+        db.session.commit()
+        return True 
+    else:
+        return False

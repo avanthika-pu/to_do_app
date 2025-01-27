@@ -37,8 +37,8 @@ lib64/
 wheels/
 .installed.cfg
 
-
-
+#instance
+instance/
 
 
 
