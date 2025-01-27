@@ -21,4 +21,4 @@ def delete_task_route(task_id):
     if success:
         return jsonify({"message": "Task successfully deleted", "status": 200}), 200
     else:
-        return jsonify({"message": "Task not found or failed to delete", "status": 404}), 404
+        return jsonify({"message": "Task not found", "status": 404}), 404
