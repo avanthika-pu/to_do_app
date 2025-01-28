@@ -1,10 +1,10 @@
+from flask_httpauth import HTTPBasicAuth
+from datetime import datetime
+
 from app import db
 from app.models.users import User 
-from flask_httpauth import HTTPBasicAuth
-from app import db
 from .base import BaseModel
 from config import Config
-from datetime import datetime
 
 auth = HTTPBasicAuth()
 
@@ -15,8 +15,8 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title =  db.Column(db.Text, nullable=False)
     description = db.Column(db.Text(255))
+    archived = db.Column(db.Boolean, default = False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  
-    archeived = db.Column(db.Boolean, default = False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

@@ -1,7 +1,7 @@
 import requests
 
 task_id = 1 
-url = f"http://127.0.0.1:5000/task/archive_task/{task_id}"
+url = f"http://127.0.0.1:5000/task/archive/{task_id}"
 
 response = requests.put(url)
 

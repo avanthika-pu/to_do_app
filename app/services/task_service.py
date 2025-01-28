@@ -15,12 +15,17 @@ def delete_task(task_id: int) -> bool:
         return True 
     else:
         return False
+    
+"""Archive task"""
 
 def archive_task_service(task_id: int) -> bool:
-    task = Task.query.get(task_id)
-    if task:
-        task.archived = True
-        db.session.commit()
-        return True 
-    else:
+    try:
+        result = Task.query.filter_by(id=task_id).update({'archived': True})
+        if result:
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error archiving task: {e}")
         return False
