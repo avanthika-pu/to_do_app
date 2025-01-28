@@ -29,3 +29,24 @@ def create_user(email: str, first_name: str, last_name: str, password: str) -> b
 
     except Exception as e:
         return {"message": str(e)}
+
+"""update user"""
+
+def update_user(user_id: int, updates: dict) -> dict:
+
+    try:
+        user = User.query.get(user_id)
+        if 'name' in updates:
+            user.name = updates['name']
+        if 'email' in updates:
+            user.email = updates['email']
+        if 'first_name' in updates:
+            user.first_name = updates['first_name']
+        if 'last_name' in updates:
+            user.last_name = updates['last_name']
+        db.session.commit()
+
+        return jsonify({"message": "User updated successfully", "status": 200})
+    except Exception as e:
+        db.session.rollback()
+        return {"success": False, "message": "An error occurred", "error": str(e)}

@@ -14,13 +14,23 @@ def creating_user():
 
     
     
-user_blueprint.route('/update_user/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    """update user"""
-    data = request.get_json()
-    user = User.query.get(user_id)
-    user.name = data.get('name', user.name)
-    user.email = data.get('email', user.email)
-    db.session.commit()
-    return jsonify({"message": "User updated successfully", "status": 200})
-    
+
+# """update user"""
+
+# @user_blueprint.route('/update/<int:user_id>', methods=['PUT'])
+# def update_user(user_id):
+#     try:
+#         data = request.get_json()
+#         user = User.query.get(user_id)
+#         user.name = data.get('name', user.name)
+#         user.email = data.get('email', user.email)
+#         user.first_name = data.get('first_name', user.first_name)
+#         user.last_name = data.get('last_name', user.last_name)
+#         db.session.commit()
+
+#         return jsonify({"message": "User updated successfully", "status": 200})
+
+#     except Exception as e:
+#         db.session.rollback()
+#         return jsonify({"message": "An error occurred", "error": str(e), "status": 500})
+
