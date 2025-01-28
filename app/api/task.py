@@ -2,7 +2,7 @@ from flask import (request, jsonify, Blueprint)
 
 from app import db
 from app.models.task import Task
-from app.services.task_service import (create_task, delete_task)
+from app.services.task_service import (create_task, delete_task, get_all_tasks)
 
 
 task_blueprint = Blueprint('task', __name__)
@@ -31,4 +31,10 @@ def update_task(task_id):
     task.decription = data.get('description', task.description)
     db.session.commit()
     return jsonify({"message": "Task updated successfully", "status": 200})
-    
+
+#List tasks
+@task_blueprint.route('/task', methods = ['GET'])
+def get_all_task_route():
+    tasks = get_all_tasks()  
+    tasks_list = [{"id": task.id, "title": task.title, "description": task.description, "user_id": task.user_id} for task in tasks]
+    return jsonify({"tasks": tasks_list, "status": 200})

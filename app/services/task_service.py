@@ -29,3 +29,9 @@ def update_task(task_id: int, title: str = None, description: str = None) -> boo
         db.session.rollback()
         print(f"Error: {e}")
         return False
+
+"""List all tasks"""
+
+def get_all_tasks():
+    tasks = Task.query.all() 
+    return tasks
