@@ -1,6 +1,7 @@
+from flask import jsonify
+
 from app.models import User
 from app import db
-from flask import jsonify
 from app.services import custom_errors
 
 def create_user(email: str, first_name: str, last_name: str, password: str) -> bool:
@@ -29,3 +30,12 @@ def create_user(email: str, first_name: str, last_name: str, password: str) -> b
 
     except Exception as e:
         return {"message": str(e)}
+
+"""update user name and email"""
+
+def update_user(user_id: int, name: str, email: str) -> bool:
+    user = User.query.get(user_id)
+    user.name = name
+    user.email = email
+    db.session.commit()
+    return True

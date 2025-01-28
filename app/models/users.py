@@ -1,15 +1,18 @@
+from werkzeug.security import (generate_password_hash, check_password_hash)
+from datetime import datetime
+from flask_httpauth import HTTPBasicAuth
+
 from app import db
 from config import Config
-from werkzeug.security import (generate_password_hash, check_password_hash)
-from flask_httpauth import HTTPBasicAuth
 from app.models import BaseModel
-from datetime import datetime
+
 
 auth = HTTPBasicAuth()
 
 class User(BaseModel):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(60),nullable=False, default = None)
     email = db.Column(db.VARCHAR(128), index=True, unique=True)
     first_name = db.Column(db.String(128))
     last_name = db.Column(db.String(64))

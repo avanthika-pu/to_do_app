@@ -1,10 +1,11 @@
+from datetime import datetime
+from flask_httpauth import HTTPBasicAuth
+
 from app import db
 from app.models.users import User 
-from flask_httpauth import HTTPBasicAuth
-from app import db
 from .base import BaseModel
 from config import Config
-from datetime import datetime
+
 
 auth = HTTPBasicAuth()
 
