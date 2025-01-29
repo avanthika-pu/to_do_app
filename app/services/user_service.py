@@ -30,23 +30,17 @@ def create_user(email: str, first_name: str, last_name: str, password: str) -> b
     except Exception as e:
         return {"message": str(e)}
 
-"""update user"""
+
+from flask import jsonify
 
 def update_user(user_id: int, updates: dict) -> dict:
-
+    """Update user"""
     try:
-        user = User.query.get(user_id)
-        if 'name' in updates:
-            user.name = updates['name']
-        if 'email' in updates:
-            user.email = updates['email']
-        if 'first_name' in updates:
-            user.first_name = updates['first_name']
-        if 'last_name' in updates:
-            user.last_name = updates['last_name']
+        result = User.query.filter_by(id=user_id).update(updates)
         db.session.commit()
 
         return jsonify({"message": "User updated successfully", "status": 200})
+
     except Exception as e:
         db.session.rollback()
-        return {"success": False, "message": "An error occurred", "error": str(e)}
+        return jsonify({"message": "User not found", "error": str(e), "status": 404})

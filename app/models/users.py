@@ -10,7 +10,6 @@ auth = HTTPBasicAuth()
 class User(BaseModel):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(60))
     email = db.Column(db.VARCHAR(128), index=True, unique=True)
     first_name = db.Column(db.String(128))
     last_name = db.Column(db.String(64))
