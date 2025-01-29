@@ -1,9 +1,6 @@
 from datetime import datetime
 from flask_httpauth import HTTPBasicAuth
 
-from flask_httpauth import HTTPBasicAuth
-from datetime import datetime
-
 from app import db
 from app.models.users import User 
 from .base import BaseModel
