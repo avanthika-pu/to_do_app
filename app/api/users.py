@@ -1,7 +1,7 @@
 from flask import (Blueprint, request, jsonify)
 
 from app import db
-from app.services.user_service import create_user, delete_user
+from app.services.user_service import (create_user, delete_user)
 from app.models.users import User
 
 
@@ -15,7 +15,7 @@ def creating_user():
 
 
 @user_blueprint.route('/delete/<int:user_id>', methods=['DELETE'])
-def delete_user_route(user_id):
+def deleting_user(user_id):
     try:
         result = delete_user(user_id) 
         
@@ -26,3 +26,4 @@ def delete_user_route(user_id):
     
     except Exception as e:
         return jsonify({"message": "internal server error", "error": str(e)})
+    
