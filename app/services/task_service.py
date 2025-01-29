@@ -18,14 +18,24 @@ def delete_task(task_id: int) -> bool:
         db.session.commit()
         return True 
     return False
+    
+"""update task"""
 
-"""Update Task"""
+def update_task(task_id: int, title: str = None, description: str = None) -> bool:
+    try:
+        updated_values = {key: value for key, value in {'title': title, 'description': description}.items() if value}
+        if updated_values:
+            Task.query.filter_by(id=task_id).update(updated_values)
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
+        return False
 
-def update_task(task_id: int, title: str = None, description: str = None) -> Task:
-    task = Task.query.get(task_id)
-    if title:
-        task.title = title
-    if description:
-        task.description = description
-    db.session.commit()
-    return task
+"""List all tasks"""
+
+def get_all_tasks():
+    tasks = Task.query.all() 
+    return tasks
