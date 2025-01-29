@@ -1,7 +1,7 @@
 from flask import (Blueprint, request, jsonify)
 
 from app import db
-from app.services.user_service import create_user
+from app.services.user_service import create_user, delete_user
 from app.models.users import User
 
 
@@ -12,15 +12,17 @@ def creating_user():
     create_user(request.json) 
     return jsonify({"message": "Successfully created user", "status": 201})
 
+
+
+@user_blueprint.route('/delete/<int:user_id>', methods=['DELETE'])
+def delete_user_route(user_id):
+    try:
+        result = delete_user(user_id) 
+        
+        if result.get('success'):
+            return jsonify({"message": "User deleted successfully", "status": 200})
+        
+        return jsonify({"message": "User not found", "status": 404})
     
-    
-user_blueprint.route('/update_user/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    """update user"""
-    data = request.get_json()
-    user = User.query.get(user_id)
-    user.name = data.get('name', user.name)
-    user.email = data.get('email', user.email)
-    db.session.commit()
-    return jsonify({"message": "User updated successfully", "status": 200})
-    
+    except Exception as e:
+        return jsonify({"message": "internal server error", "error": str(e)})
