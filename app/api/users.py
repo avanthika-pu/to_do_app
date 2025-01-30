@@ -8,7 +8,7 @@ user_blueprint = Blueprint('user', __name__)
 def creating_user():
     create_user(request.json) 
 
-    return jsonify({"message": "Successfully created user", "status": 200}), 200
+    return jsonify({"message": "Successfully created user", "status": 201})
 
 
     
