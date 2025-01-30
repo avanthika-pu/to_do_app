@@ -36,6 +36,7 @@ def delete_task(task_id: int) -> bool:
     
 
 def archive_task_service(task_id: int) -> bool:
+    """Archive Task"""
     try:
         result = Task.query.filter_by(id=task_id).update({'archived': True})
         if result:

@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 
 
 from app import db
@@ -25,10 +25,10 @@ def create_user(email: str, first_name: str, last_name: str, password: str) -> b
         if User.query.filter_by(email=email).count():
             raise ValueError("A user with this email already exists.")
         
-       
-        user = User(email=email, first_name=first_name, last_name=last_name,password=password)
-        user.hash_password(password)
-        db.session.add(user)
+
+        # user = User(email=email, first_name=first_name, last_name=last_name,password=password)
+        data = request.json
+        db.session.add(User(**{**data, "password": User.hash_password(data["password"])}))
         db.session.commit()
 
         return True
