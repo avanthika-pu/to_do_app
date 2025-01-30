@@ -23,6 +23,7 @@ class User(BaseModel):
         data = {
             'id': self.id,
             'user_id': self.id,
+            'name': self.name,
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,

@@ -1,8 +1,6 @@
-from flask import jsonify
-
-
+from app.models import User
 from app import db
-from app.models.users import User
+from flask import jsonify
 from app.services import custom_errors
 
 def create_user(email: str, first_name: str, last_name: str, password: str) -> bool:
@@ -32,16 +30,17 @@ def create_user(email: str, first_name: str, last_name: str, password: str) -> b
     except Exception as e:
         return {"message": str(e)}
 
-def delete_user(user_id: int) -> dict:
-    """Delete user"""
+
+from flask import jsonify
+
+def update_user(user_id: int, updates: dict) -> dict:
+    """Update user"""
     try:
-        result = User.query.filter(User.id == user_id).update({"is_deleted": True})
-        db.session.commit() 
-        return jsonify({"message": "User deleted successfully", "status": 200})
+        result = User.query.filter_by(id=user_id).update(updates)
+        db.session.commit()
+
+        return jsonify({"message": "User updated successfully", "status": 200})
 
     except Exception as e:
         db.session.rollback()
-        return ({"message": "user not found", "error": str(e)})
-
-    
-
+        return jsonify({"message": "User not found", "error": str(e), "status": 404})
