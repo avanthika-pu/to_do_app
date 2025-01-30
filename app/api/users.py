@@ -16,6 +16,5 @@ def creating_user():
     
 @user_blueprint.route('/update/<int:user_id>', methods=['PUT'])
 def updating_user(user_id):
-    updates = request.get_json()  
-    result = update_user(user_id, updates)  
-    return jsonify({"message": "user updated sccessfully", "status": 200})
+    update_user(user_id, request.json)  
+    return jsonify({"message": "User updated successfully","status": 200})

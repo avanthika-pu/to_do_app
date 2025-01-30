@@ -1,7 +1,7 @@
 import requests
 
 user_id = 1 
-url = f"http://127.0.0.1:5000/user/update_user/{user_id}"
+url = f"http://127.0.0.1:5000/user/update/{user_id}"
 
 user_data = {
     "name": "Mathew",

@@ -20,18 +20,24 @@ def delete_task(task_id: int) -> bool:
     return False
     
 """update task"""
-
 def update_task(task_id: int, title: str = None, description: str = None) -> bool:
     try:
+        task = Task.query.get(task_id)
+        if not task:
+            raise ValueError(f"Task with ID {task_id} not found.")
+        
         updated_values = {key: value for key, value in {'title': title, 'description': description}.items() if value}
         if updated_values:
             Task.query.filter_by(id=task_id).update(updated_values)
             db.session.commit()
             return True
         return False
+    except ValueError as e:
+        print(f"Error: {e}")
+        return False
     except Exception as e:
         db.session.rollback()
-        print(f"Error: {e}")
+        print(f"An unexpected error occurred: {e}")
         return False
 
 """List all tasks"""
