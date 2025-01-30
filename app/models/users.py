@@ -1,9 +1,11 @@
+from datetime import datetime
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import (generate_password_hash, check_password_hash)
+
 from app import db
 from config import Config
-from werkzeug.security import (generate_password_hash, check_password_hash)
-from flask_httpauth import HTTPBasicAuth
 from app.models import BaseModel
-from datetime import datetime
+
 
 auth = HTTPBasicAuth()
 
