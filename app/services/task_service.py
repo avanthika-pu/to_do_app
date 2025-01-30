@@ -17,25 +17,19 @@ def delete_task(task_id: int) -> bool:
         db.session.delete(task_to_delete)
         db.session.commit()
         return True 
-    return False
+    else:
+        return False
     
-"""update task"""
+"""Archive task"""
 
-def update_task(task_id: int, title: str = None, description: str = None) -> bool:
+def archive_task_service(task_id: int) -> bool:
     try:
-        updated_values = {key: value for key, value in {'title': title, 'description': description}.items() if value}
-        if updated_values:
-            Task.query.filter_by(id=task_id).update(updated_values)
+        result = Task.query.filter_by(id=task_id).update({'archived': True})
+        if result:
             db.session.commit()
             return True
         return False
     except Exception as e:
         db.session.rollback()
-        print(f"Error: {e}")
+        print(f"Error archiving task: {e}")
         return False
-
-"""List all tasks"""
-
-def get_all_tasks():
-    tasks = Task.query.all() 
-    return tasks
