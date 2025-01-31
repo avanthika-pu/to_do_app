@@ -1,3 +1,4 @@
+import redis
 import os
 from dotenv import load_dotenv
 
@@ -12,4 +13,8 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///app.db'
     PORT = os.environ.get('PORT')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    AUTH_TOKEN_EXPIRES = os.environ.get('AUTH_TOKEN_EXPIRES')
     PER_PAGE = os.environ.get('PER_PAGE')
+    REDIS_URL = "redis://localhost:6379/0"  
+    REDIS = redis.StrictRedis.from_url(REDIS_URL)
+ 
