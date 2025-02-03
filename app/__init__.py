@@ -31,7 +31,7 @@ def create_app(config_class=Config):
     # Register blueprints
     from app.api.users import user_blueprint
     from app.api.task import task_blueprint
-    from app.api.auth import bp as auth_bp
+    from app.api.auth import  auth_bp
 
     app.register_blueprint(user_blueprint, url_prefix='/user')
     app.register_blueprint(task_blueprint, url_prefix='/task')

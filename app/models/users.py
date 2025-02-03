@@ -1,28 +1,30 @@
-from datetime import datetime
+import json
 from datetime import timedelta
+import redis
 from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import (generate_password_hash, check_password_hash)
 from itsdangerous import URLSafeTimedSerializer
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, redis_obj
+from .base import BaseModel
 from config import Config
-from app.models import BaseModel
-
 
 auth = HTTPBasicAuth()
 
+
 class User(BaseModel):
     __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.VARCHAR(128), index=True, unique=True)
-    first_name = db.Column(db.String(128))
-    last_name = db.Column(db.String(64))
-    password = db.Column(db.TEXT(128))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    registered = db.Column(db.Boolean, default=False)
-    is_active = db.Column(db.Boolean, default=True)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), index=True, unique=True, nullable=False)
+    password = db.Column(db.TEXT)
+    # User information
+    first_name = db.Column(db.String(60))
+    last_name = db.Column(db.String(60))
 
+    # User state
+    registered = db.Column(db.Boolean, default=True)
+
+  
 
     def login_to_dict(self):
         """
@@ -67,7 +69,7 @@ class User(BaseModel):
         """
         Check password with the hashed password
         """
-        return check_password_hash(self.hashed_password, password)
+        return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration: int = Config.AUTH_TOKEN_EXPIRES):
         """
@@ -75,10 +77,10 @@ class User(BaseModel):
         """
         s = URLSafeTimedSerializer(Config.SECRET_KEY)
         token = s.dumps(
-            {'id': self.id, 'name': self.name, 'role_id': self.role_id, 'email': self.email})
+            {'id': self.id, 'first_name': self.first_name, 'last_name':self.last_name, 'email': self.email})
         add_user_token_in_cache(self.id, expiration, token)
         return token
-
+    
     @staticmethod
     def verify_auth_token(token: str, expires_in: int = Config.AUTH_TOKEN_EXPIRES):
         """
@@ -95,8 +97,14 @@ class User(BaseModel):
 
 
 def add_user_token_in_cache(user_id: int, expiry_at: int, user_auth_token: str) -> bool:
-    redis_obj.setex(f"{user_id}", timedelta(seconds=expiry_at), user_auth_token)
+    """Store the auth token in Redis with an expiration time"""
+
+    if expiry_at is None or not isinstance(expiry_at, int):
+        raise ValueError("Expiry time cannot be None or invalid")
+
+    redis_obj.setex(f"auth_token:{user_id}", timedelta(seconds=int(expiry_at)), user_auth_token)
     return True
+
 
 
 def verify_user_token_in_cache(user_id: int, user_auth_token: str):
