@@ -20,7 +20,6 @@ class User(BaseModel):
     password = db.Column(db.TEXT(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    # is_invited = db.Column(db.Boolean, default=False)
     registered = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
 

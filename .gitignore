@@ -29,6 +29,11 @@ myvenv/
 #tmp folder
 tmp/
 
+#test file
+
+test/
+request_test/
+
 # Distribution / packaging
 .Python
 downloads/

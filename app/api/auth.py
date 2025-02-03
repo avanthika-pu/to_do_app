@@ -46,15 +46,18 @@ def register():
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-    return jsonify({"message": "User created successfully", "status": 201})
-
-@bp.route('/login', methods=['POST'])
-def login_user():
-    """Login to the application"""
-    verify_password(request.json.get('email', ' ').lower().strip(), request.json.get('password', ' ').strip())
-    token = g.user.generate_auth_token()
-    return jsonify({'data': g.user.login_to_dict(), 'auth_token': token, 'status': 200})
+    return jsonify({"message": "User Registered successfully", "status": 201})
 
 
+@bp.route('/login', methods=['POST']) 
+def login():
+    data = request.get_json()
 
+    if not all(data.get(field) for field in ['email', 'password']):
+        return jsonify({"message": "Email and password are required", "status": 400})
 
+    user = User.query.filter_by(email=data['email']).first()
+    if not user or not check_password_hash(user.password, data['password']):
+        return jsonify({"message": "Invalid credentials", "status": 401})
+
+    return jsonify({"message": "Login successful", "status": 200})
