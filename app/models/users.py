@@ -65,19 +65,24 @@ class User(BaseModel):
     def hash_password(self, password: str):
         self.hashed_password = generate_password_hash(password)
 
-    def check_password(self, password: str):
-        """
-        Check password with the hashed password
-        """
+    def check_password(self, password):
+        if self.password is None:
+            print("Error: Password is None in the database")
+            return False
+    
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration: int = Config.AUTH_TOKEN_EXPIRES):
         """
         Generate user token and store the value in redis
         """
+
         s = URLSafeTimedSerializer(Config.SECRET_KEY)
+        print(s)
+        print(self.first_name)
         token = s.dumps(
             {'id': self.id, 'first_name': self.first_name, 'last_name':self.last_name, 'email': self.email})
+        print(token)
         add_user_token_in_cache(self.id, expiration, token)
         return token
     
@@ -89,6 +94,7 @@ class User(BaseModel):
         serializer = URLSafeTimedSerializer(Config.SECRET_KEY)
         try:
             data = serializer.loads(token, max_age=expires_in)
+            print(data,"DATAAAAAAA")
             if verify_user_token_in_cache(data['id'], token):
                 return data
         except Exception as e:
@@ -108,7 +114,7 @@ def add_user_token_in_cache(user_id: int, expiry_at: int, user_auth_token: str) 
 
 
 def verify_user_token_in_cache(user_id: int, user_auth_token: str):
-    if redis_obj.get(f"{user_id}") == user_auth_token:
+    if redis_obj.get(f"auth_token:{user_id}") == user_auth_token:
         return True
     return False
 
@@ -117,6 +123,6 @@ def remove_user_token(user_id: int, user_auth_token: str = None):
     """
     Remove user token from redis
     """
-    if redis_obj.get(f"{user_id}") == user_auth_token or not user_auth_token:
-        redis_obj.delete(f"{user_id}")
+    if redis_obj.get(f"auth_token:{user_id}") == user_auth_token or not user_auth_token:
+        redis_obj.delete(f"auth_token:{user_id}")
     return True
