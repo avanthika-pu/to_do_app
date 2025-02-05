@@ -1,9 +1,11 @@
 import json
-from datetime import timedelta
 import redis
+from datetime import timedelta
+
 from flask_httpauth import HTTPBasicAuth
 from itsdangerous import URLSafeTimedSerializer
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (
+    generate_password_hash, check_password_hash)
 
 from app import db, redis_obj
 from .base import BaseModel
@@ -94,7 +96,7 @@ class User(BaseModel):
         serializer = URLSafeTimedSerializer(Config.SECRET_KEY)
         try:
             data = serializer.loads(token, max_age=expires_in)
-            print(data,"DATAAAAAAA")
+            print(data)
             if verify_user_token_in_cache(data['id'], token):
                 return data
         except Exception as e:

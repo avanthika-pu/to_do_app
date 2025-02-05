@@ -1,30 +1,19 @@
 from functools import wraps
-from flask import g
+
+import jwt
+from itsdangerous import URLSafeTimedSerializer
+from werkzeug.security import (generate_password_hash)
+from flask import g, current_app as app
 
 from app import db
-import jwt
-from flask import current_app as app
-from app.services.custom_errors import NoContent, Forbidden, Unauthorized
 from app.models import User, remove_user_token
-from werkzeug.security import generate_password_hash
+from app.services.custom_errors import (
+    NoContent, Forbidden, Unauthorized)
 from app.services.user_service import User
+from config import Config
 
 
 class AuthService(object):
-    @staticmethod
-    def verify_auth_token(token):
-        try:
-            payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            user = User.query.get(payload['user_id'])
-            if user:
-                return user
-            raise Unauthorized("User not found")
-        except jwt.ExpiredSignatureError:
-            raise Unauthorized("Token has expired")
-        except jwt.InvalidTokenError:
-            raise Unauthorized("Invalid token")
-        
-
     @staticmethod
     def forgot_password(email: str, expires_in=3600) -> tuple:
         user = User.query.filter_by(email=email, is_active=True).first()

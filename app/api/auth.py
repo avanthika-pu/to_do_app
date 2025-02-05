@@ -1,15 +1,18 @@
-from flask import Blueprint,request, jsonify, g, render_template
-from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
+from flask import Blueprint,request, jsonify, g
 
-from app.api import bp
+from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
+from werkzeug.security import (
+    check_password_hash,generate_password_hash)
+
 from app import db
-from app import redis_obj
-from app.services.custom_errors import (BadRequest, Unauthorized, InternalError, Forbidden)
+from app.api import bp
+from app.services.custom_errors import (
+    BadRequest, Unauthorized, InternalError, Forbidden)
 from app.services.sendgrid_email import send_email
-from werkzeug.security import check_password_hash,generate_password_hash
 from app.services.auth import AuthService
 from app.models import User, remove_user_token
 from config import Config
+
 
 
 auth_blueprint = Blueprint('auth', __name__)
@@ -49,9 +52,8 @@ def verify_token(token: str) -> bool:
     raise Unauthorized()
 
 
-
-
 @auth_blueprint.route('/login', methods=['POST'])
+@bp.route('/login', methods=['POST'])
 def login_user():
     """
     Login to the application with email address and password 
@@ -63,38 +65,39 @@ def login_user():
 
 
 @auth_blueprint.route('/register', methods=['POST'])
+@bp.route('/login', methods=['POST'])
 def register_user():
     """"register user"""
-    data = request.get_json()
-    if not data.get('email') or not data.get('password') or not data.get('first_name') or not data.get('last_name'):
-        return jsonify({"message": "Email, password, first name, and last name are required", "status": 400})
-    if User.query.filter_by(email=data['email']).first():
+    data = request.json
+    required_fields = ['first_name', 'last_name', 'email', 'password']
+    missing_field = next((field for field in required_fields if field not in data), None) 
+    if missing_field:
+        return jsonify({"error": f"{missing_field} is required", "status": 400})
+
+    if User.query.filter_by(email=data['email']).count(): 
         return jsonify({"message": "User already exists", "status": 400})
+
     hashed_password = generate_password_hash(data['password'])
     new_user = User(**{**data, 'password': hashed_password, 'registered': True})
 
     db.session.add(new_user)
     db.session.commit()
+    db.session.rollback() # added rollback 
 
     return jsonify({"message": "User registered successfully", "status": 201})
 
+
 @auth_blueprint.route('/forgot_password', methods=['POST'])
+@bp.route('/login', methods=['POST'])
 def forgot_password():
     """Forgot password request"""
-    print(request.json.get('email', ''))
-    email = request.json.get('email', '').strip().lower()
-    print(email)
-    if not email:
-        return jsonify({"message": "Email is required", "status": 400})
-    print(email)
     try:
-        token = auth_service.forgot_password(email)
+        token = auth_service.forgot_password(request.json.get('email', '').strip().lower(),)
         print(token)
-        reset_url = f"{Config.FRONT_END_PASSWORD_RESET_URL}/{token}"
-        print(reset_url)
-        send_an_email = send_email(to_email=email, html_content=f"Click here to reset: {reset_url}", subject='Reset Password')
-        print(send_an_email)
-        if send_an_email:
+        send_an_email = send_email(to_email=request.json.get('email', '').strip().lower(),
+                                    html_content="Click here to reset<html>",
+                                    subject='Reset Password')                                                                                                                                                                                                                                    
+        if send_an_email:                                                                                                                                                                                                                                                                                                                                                   
             return jsonify({"message": "Please check your inbox", "status": 200})
         raise InternalError()
     except Exception as e:
@@ -102,6 +105,7 @@ def forgot_password():
     
 
 @auth_blueprint.route('/reset_password', methods=['PATCH'])
+@bp.route('/login', methods=['POST'])
 def reset_password_req():
     """reset password request"""
     token = request.headers.get('Authorization')
@@ -121,9 +125,6 @@ def reset_password_req():
 @tokenAuth.login_required()
 def logout():
     """logout user"""
-    token = request.headers.get('Authorization')
-    print(f"Extracted Token: {token}")
-    verify_token(token)
     remove_user_token(g.user['id'], request.headers.get('Authorization', '').replace('Token ', '').strip())
     return jsonify({'message': 'Logout Successfully', 'status': 200})
 
