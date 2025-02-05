@@ -1,5 +1,5 @@
-from flask import jsonify
 from typing import Dict
+from flask import jsonify
 
 from app import db
 from app.models import User

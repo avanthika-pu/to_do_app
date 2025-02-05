@@ -1,14 +1,14 @@
 from datetime import datetime
 from datetime import timedelta
 from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import (generate_password_hash, check_password_hash)
+from werkzeug.security import (
+    generate_password_hash, check_password_hash)
 
 from app import db
-from config import Config
 from app.models import BaseModel
 from itsdangerous import URLSafeTimedSerializer
 from app import redis_obj
-
+from config import Config
 
 auth = HTTPBasicAuth()
 
