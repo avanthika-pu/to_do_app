@@ -68,23 +68,25 @@ def login_user():
 @bp.route('/login', methods=['POST'])
 def register_user():
     """"register user"""
-    data = request.json
-    required_fields = ['first_name', 'last_name', 'email', 'password']
-    missing_field = next((field for field in required_fields if field not in data), None) 
-    if missing_field:
-        return jsonify({"error": f"{missing_field} is required", "status": 400})
+    try:
+        data = request.json
+        required_fields = ['first_name', 'last_name', 'email', 'password']
+        missing_field = next((field for field in required_fields if field not in data), None) 
+        if missing_field:
+            return jsonify({"error": f"{missing_field} is required", "status": 400})
 
-    if User.query.filter_by(email=data['email']).count(): 
-        return jsonify({"message": "User already exists", "status": 400})
+        if User.query.filter_by(email=data['email']).count(): 
+            return jsonify({"message": "User already exists", "status": 400})
 
-    hashed_password = generate_password_hash(data['password'])
-    new_user = User(**{**data, 'password': hashed_password, 'registered': True})
-
-    db.session.add(new_user)
-    db.session.commit()
-    db.session.rollback() # added rollback 
-
-    return jsonify({"message": "User registered successfully", "status": 201})
+        hashed_password = generate_password_hash(data['password'])
+        
+        new_user = User(**{**data, 'password': hashed_password, 'registered': True})
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"message": "User registered successfully", "status": 201})
+    except Exception as e:
+        db.session.rollback() 
+        return jsonify({"message": str(e), "status": 500})
 
 
 @auth_blueprint.route('/forgot_password', methods=['POST'])
