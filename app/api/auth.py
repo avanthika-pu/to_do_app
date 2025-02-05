@@ -1,4 +1,4 @@
-from flask import Blueprint,request, jsonify, g
+from flask import (Blueprint,request, jsonify, g)
 
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from werkzeug.security import (
@@ -79,7 +79,7 @@ def register_user():
             return jsonify({"message": "User already exists", "status": 400})
 
         hashed_password = generate_password_hash(data['password'])
-        
+
         new_user = User(**{**data, 'password': hashed_password, 'registered': True})
         db.session.add(new_user)
         db.session.commit()
