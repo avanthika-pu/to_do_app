@@ -100,7 +100,6 @@ def forgot_password():
     
 
 @auth_blueprint.route('/reset_password', methods=['PATCH'])
-@bp.route('/auth/reset_password', methods=['PATCH'])
 def reset_password_req():
     token = request.headers.get('Authorization')
     print(f"Extracted Token: {token}")
@@ -116,7 +115,6 @@ def reset_password_req():
 
 
 @auth_blueprint.route('/logout', methods=['GET'])
-@bp.route('/logout', methods=['GET'])
 @tokenAuth.login_required()
 def logout():
     token = request.headers.get('Authorization')
