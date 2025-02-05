@@ -1,16 +1,10 @@
 from app import db
 from app.models.task import Task
 
-<<<<<<< HEAD
 
 
 def create_task(title: str, description: str, user_id: int) -> bool:
     """Create Task"""
-=======
-"""Create Task"""
-
-def create_task(title: str, description: str, user_id: int) -> Task:
->>>>>>> origin/main
     task = Task(title=title, description=description, user_id=user_id)
     db.session.add(task)
     db.session.commit()
@@ -28,16 +22,10 @@ def delete_task(task_id: int) -> bool:
     else:
         return False
     
-<<<<<<< HEAD
 
 
 def update_task(task_id: int, title: str = None, description: str = None) -> bool:
     """Update Task"""
-=======
-"""Archive task"""
-
-def archive_task_service(task_id: int) -> bool:
->>>>>>> origin/main
     try:
         result = Task.query.filter_by(id=task_id).update({'archived': True})
         if result:
@@ -46,7 +34,6 @@ def archive_task_service(task_id: int) -> bool:
         return False
     except Exception as e:
         db.session.rollback()
-<<<<<<< HEAD
         print(f"Error: {e}")
         return False
 
@@ -55,7 +42,3 @@ def get_all_tasks():
     """listing all tasks"""
     tasks = Task.query.all() 
     return tasks
-=======
-        print(f"Error archiving task: {e}")
-        return False
->>>>>>> origin/main
