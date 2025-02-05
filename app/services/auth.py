@@ -18,8 +18,7 @@ class AuthService(object):
             user = User.query.get(payload['user_id'])
             if user:
                 return user
-            else:
-                raise Unauthorized("User not found")
+            raise Unauthorized("User not found")
         except jwt.ExpiredSignatureError:
             raise Unauthorized("Token has expired")
         except jwt.InvalidTokenError:

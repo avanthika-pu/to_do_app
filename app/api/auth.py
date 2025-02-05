@@ -30,7 +30,7 @@ def verify_password(email: str, password: str) -> bool:
         raise Unauthorized("Please register first and try again")
     if user.check_password(password):
         g.user = user
-        print(g.user, "111111111234") 
+        print(g.user) 
         return True
     raise BadRequest('Wrong password')
 
@@ -39,10 +39,10 @@ def verify_token(token: str) -> bool:
     if not token:
         token = str(request.headers.get('Authorization', ''))
     token = token.split('Token ')[-1]
-    print(token, "###########")
+    print(token)
     if token:
         user_is = User.verify_auth_token(token)
-        print(user_is, '@@@@@@@@@@@@@@@@')
+        print(user_is)
         if user_is:
             g.user = user_is
             return True
@@ -54,16 +54,17 @@ def verify_token(token: str) -> bool:
 @auth_blueprint.route('/login', methods=['POST'])
 def login_user():
     """
-    Login to the application with email address and password in
+    Login to the application with email address and password 
     """
     verify_password(request.json.get('email', ' ').lower().strip(), request.json.get('password', ' ').strip())
     token = g.user.generate_auth_token()
-    print(g.user, "222234454")
+    print(g.user)
     return jsonify({'data': g.user.login_to_dict(), 'auth_token': token, 'status': 200})
 
 
 @auth_blueprint.route('/register', methods=['POST'])
 def register_user():
+    """"register user"""
     data = request.get_json()
     if not data.get('email') or not data.get('password') or not data.get('first_name') or not data.get('last_name'):
         return jsonify({"message": "Email, password, first name, and last name are required", "status": 400})
@@ -79,6 +80,7 @@ def register_user():
 
 @auth_blueprint.route('/forgot_password', methods=['POST'])
 def forgot_password():
+    """Forgot password request"""
     print(request.json.get('email', ''))
     email = request.json.get('email', '').strip().lower()
     print(email)
@@ -101,6 +103,7 @@ def forgot_password():
 
 @auth_blueprint.route('/reset_password', methods=['PATCH'])
 def reset_password_req():
+    """reset password request"""
     token = request.headers.get('Authorization')
     print(f"Extracted Token: {token}")
     verify_token(token)
@@ -110,16 +113,17 @@ def reset_password_req():
     if request.json.get('new_password') != request.json.pop('confirm_password', None):
         raise BadRequest('Enter the password correctly.')
     if auth_service.new_password(g.user['id'], request.json['new_password']):
-        return jsonify({'message': 'Password has been changed successfully', 'status': 200}), 200
+        return jsonify({'message': 'Password has been changed successfully', 'status': 200})
     return InternalError()
 
 
 @auth_blueprint.route('/logout', methods=['GET'])
 @tokenAuth.login_required()
 def logout():
+    """logout user"""
     token = request.headers.get('Authorization')
     print(f"Extracted Token: {token}")
     verify_token(token)
     remove_user_token(g.user['id'], request.headers.get('Authorization', '').replace('Token ', '').strip())
-    return jsonify({'message': 'Logout Successfully', 'status': 200}), 200
+    return jsonify({'message': 'Logout Successfully', 'status': 200})
 
