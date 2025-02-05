@@ -1,7 +1,8 @@
 from flask import (Blueprint, request, jsonify)
 
 from app import db
-from app.services.user_service import create_user, update_user
+from app.services.user_service import (
+    create_user, update_user)
 from app.models.users import User
 
 user_blueprint = Blueprint('user', __name__)
@@ -12,8 +13,7 @@ def creating_user():
     return jsonify({"message": "Successfully created user", "status": 200})
 
     
-@user_blueprint.route('/update/<int:user_id>', methods=['PUT'])
+@user_blueprint.route('/<int:user_id>', methods=['PUT'])
 def updating_user(user_id):
-    updates = request.get_json()  
-    result = update_user(user_id, updates)  
-    return jsonify({"message": "user updated sccessfully", "status": 200})
+    update_user(user_id, request.json)  
+    return jsonify({"message": "User updated successfully","status": 200})
