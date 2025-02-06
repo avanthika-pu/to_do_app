@@ -5,9 +5,12 @@ from config import Config
 from flask_cors import CORS
 from sqlalchemy import text
 import sqlite3
+import redis
 
 db = SQLAlchemy()
 migrate = Migrate()
+
+redis_obj = redis.StrictRedis.from_url(Config.REDIS_URL, decode_responses=True)
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -26,10 +29,13 @@ def create_app(config_class=Config):
             print(f"Database connection failed: {str(e)}")
 
     # Register blueprints
-    from app.api.users import user_blueprint
+    # from app.api.users import user_blueprint
     from app.api.task import task_blueprint
-    app.register_blueprint(user_blueprint, url_prefix='/user')
+    from app.api.auth import  auth_blueprint
+
+    # app.register_blueprint(user_blueprint, url_prefix='/user')
     app.register_blueprint(task_blueprint, url_prefix='/task')
+    app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 
     return app
 

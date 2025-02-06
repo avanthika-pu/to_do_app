@@ -6,10 +6,9 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 
 class Config:
-    DEBUG  = os.environ[('DEBUG')] or True
-    SECRET_KEY = os.environ[('SECRET_KEY')]
-    #PASSSWORD_RESET_SALT = os.environ.get('PASSWORD_RESET_SALT')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///app.db'
-    PORT = os.environ.get('PORT')
+    DEBUG  = os.environ['DEBUG'] or True
+    SECRET_KEY = os.environ['SECRET_KEY']
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL'] or 'sqlite:///app.db'
+    AUTH_TOKEN_EXPIRES = 604800
+    REDIS_URL = "redis://localhost:6379/0" 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    PER_PAGE = os.environ.get('PER_PAGE')
