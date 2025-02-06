@@ -24,15 +24,6 @@ def delete_task_route(task_id):
         return jsonify({"message": "Task successfully deleted", "status": 200})
     return jsonify({"message": "Task not found or failed to delete", "status": 404})
 
-#archive task
-@task_blueprint.route('/archive/<int:task_id>', methods=['PUT'])
-def archive_task_route(task_id):
-    success = archive_task_service(task_id)
-    if success:
-        return jsonify({"message": "Task archived successfully", "status": 200})
-    return jsonify({"message": "Task not found", "status": 404})
-    
-
 
 @task_blueprint.route('/update/<int:task_id>', methods = ['PUT'])
 def update_task(task_id):
