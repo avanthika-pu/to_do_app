@@ -65,7 +65,6 @@ def login_user():
 
 
 @auth_blueprint.route('/register', methods=['POST'])
-@bp.route('/login', methods=['POST'])
 def register_user():
     """"register user"""
     try:
@@ -90,7 +89,6 @@ def register_user():
 
 
 @auth_blueprint.route('/forgot_password', methods=['POST'])
-@bp.route('/login', methods=['POST'])
 def forgot_password():
     """Forgot password request"""
     try:
@@ -107,7 +105,6 @@ def forgot_password():
     
 
 @auth_blueprint.route('/reset_password', methods=['PATCH'])
-@bp.route('/login', methods=['POST'])
 def reset_password_req():
     """reset password request"""
     token = request.headers.get('Authorization')
