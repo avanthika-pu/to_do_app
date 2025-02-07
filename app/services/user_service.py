@@ -31,8 +31,6 @@ def create_user(email: str, first_name: str, last_name: str, password: str) -> b
         return {"message": str(e)}
 
 
-from flask import jsonify
-
 def update_user(user_id: int, updates: dict) -> dict:
     """Update user"""
     try:
