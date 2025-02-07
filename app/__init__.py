@@ -29,11 +29,11 @@ def create_app(config_class=Config):
             print(f"Database connection failed: {str(e)}")
 
     # Register blueprints
-    from app.api.users import user_blueprint
+    # from app.api.users import user_blueprint
     from app.api.task import task_blueprint
     from app.api.auth import  auth_blueprint
 
-    app.register_blueprint(user_blueprint, url_prefix='/user')
+    # app.register_blueprint(user_blueprint, url_prefix='/user')
     app.register_blueprint(task_blueprint, url_prefix='/task')
     app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 

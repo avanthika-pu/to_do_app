@@ -5,7 +5,6 @@ from werkzeug.security import (
     check_password_hash,generate_password_hash)
 
 from app import db
-from app.api import bp
 from app.services.custom_errors import (
     BadRequest, Unauthorized, InternalError, Forbidden)
 from app.services.sendgrid_email import send_email
@@ -53,7 +52,6 @@ def verify_token(token: str) -> bool:
 
 
 @auth_blueprint.route('/login', methods=['POST'])
-@bp.route('/login', methods=['POST'])
 def login_user():
     """
     Login to the application with email address and password 

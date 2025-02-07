@@ -96,12 +96,10 @@ class User(BaseModel):
         serializer = URLSafeTimedSerializer(Config.SECRET_KEY)
         try:
             data = serializer.loads(token, max_age=expires_in)
-            print(data)
             if verify_user_token_in_cache(data['id'], token):
                 return data
         except Exception as e:
-            print(e)
-        return False
+            return False
 
 
 def add_user_token_in_cache(user_id: int, expiry_at: int, user_auth_token: str) -> bool:
