@@ -2,8 +2,7 @@ from flask import (request, jsonify, Blueprint)
 
 from app import db
 from app.models.task import Task
-from app.services.task_service import (
-    create_task, delete_task, archive_task_service)
+from app.services.task_service import (create_task, delete_task, archive_task_service)
 
 
 task_blueprint = Blueprint('task', __name__)
